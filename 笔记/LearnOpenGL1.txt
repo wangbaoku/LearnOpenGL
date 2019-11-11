@@ -1,0 +1,42 @@
+				学习OpenGL第一课
+OpenGL：一般被认为是API，包含了一系列可以操作图形、图像的函数。
+		实际仅仅是一个由Khronos组织制定并维护的规范。
+
+核心模式与立即渲染模式：早期的OpenGL使用立即渲染模式（固定渲染管线），因效率低，3.2开始废弃立即渲染模式，
+使用OpenGL的核心模式（Core-profile）进行开发。
+
+状态机：OpenGL自身是一个巨大的状态机（state Machine）：一系列的变量描述OpenGL此刻应当如何运行。
+OpenGL的状态通常被称为OpenGL上下文（Context）。
+
+				学习OpenGL第二课
+GLFW：一个专门针对OpenGL的C语言库，它允许用户创建OpenGL上下文，定义窗口参数以及处理用户输入。
+下载的win32预编译库。
+创建vc++空项目，将头文件和GLFW库链接进工程。
+
+GLAD：是一个约定规范的开源的库，在线生成C++核心模式的库文件，添加到工程内。
+GLAD是用来管理OpenGL的函数指针的，所以在调用任何OpenGL的函数之前我们需要初始化GLAD。
+
+				学习OpenGL第三课
+使用GLFW创建窗口
+引用头文件
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+
+在main函数中调用glfwInit函数来初始化GLFW，使用glfwWindowHint函数来配置GLFW。			
+glfwCreateWindow函数需要窗口的宽和高作为它的前两个参数。第三个参数表示这个窗口的名称。
+glViewport函数前两个参数控制窗口左下角的位置。第三个和第四个参数控制渲染窗口的宽度和高度（像素）。
+glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+
+渲染循环
+while(!glfwWindowShouldClose(window))
+{
+    glfwSwapBuffers(window);
+    glfwPollEvents();    
+}
+glfwWindowShouldClose函数在我们每次循环的开始前检查一次GLFW是否被要求退出，如果是的话该函数返回true然后渲染循环便结束了，之后为我们就可以关闭应用程序了。
+glfwPollEvents函数检查有没有触发什么事件（比如键盘输入、鼠标移动等）、更新窗口状态，并调用对应的回调函数（可以通过回调方法手动设置）。
+glfwSwapBuffers函数会交换颜色缓冲（它是一个储存着GLFW窗口每一个像素颜色值的大缓冲），它在这一迭代中被用来绘制，并且将会作为输出显示在屏幕上。
+当渲染循环结束后我们需要正确释放/删除之前的分配的所有资源。我们可以在main函数的最后调用glfwTerminate函数来完成。
+glfwGetKey接收按键输入
+glClearColor函数是一个状态设置函数，清空屏幕所用的颜色
+glClear函数则是一个状态使用的函数，清空屏幕的颜色缓冲
